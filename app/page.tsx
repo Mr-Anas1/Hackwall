@@ -31,14 +31,12 @@ export default function Home() {
     }
   }, []);
 
-  const { wallpapers, wallpapersError } = useWallpapers();
+  const { wallpapers, wallpapersError, isLoading } = useWallpapers();
 
   // Filter wallpapers based on category and search
   useEffect(() => {
-    // If wallpapers state is empty (initial load), don't filter yet
     if (wallpapers.length === 0) return;
 
-    // Guard: exclude rows that can't render an image so infinite-scroll math stays correct
     const usableWallpapers = wallpapers.filter(
       (w: Wallpaper) => Boolean(w?.cloudinaryPublicId && String(w.cloudinaryPublicId).trim())
     );
@@ -62,40 +60,39 @@ export default function Home() {
     setDisplayedWallpapers(filtered.slice(0, ITEMS_PER_PAGE));
   }, [selectedCategory, searchQuery, wallpapers]);
 
-  // Load more wallpapers
-  const loadMore = () => {
-    const nextPage = page + 1;
-    const startIndex = (nextPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-    
-    const newWallpapers = allFilteredWallpapers.slice(0, endIndex);
-    
-    setDisplayedWallpapers(newWallpapers);
-    setPage(nextPage);
+  // Load more effect tied strictly to page state
+  useEffect(() => {
+    if (page === 1) return; // page 1 is handled in the filtering effect above
+    const endIndex = page * ITEMS_PER_PAGE;
+    setDisplayedWallpapers(allFilteredWallpapers.slice(0, endIndex));
     setHasMore(endIndex < allFilteredWallpapers.length);
-  };
+  }, [page, allFilteredWallpapers]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
     if (!hasMore) return;
+    
+    let timeoutId: NodeJS.Timeout;
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          // Add a small delay for realistic loading feel
-          setTimeout(() => {
-            loadMore();
-          }, 500);
+          timeoutId = setTimeout(() => {
+            setPage((prevPage) => prevPage + 1);
+          }, 400);
         }
       },
-      { threshold: 1.0 }
+      { threshold: 0.1 } // Trigger slightly earlier than 1.0 (fully visible)
     );
 
     const sentinel = document.getElementById('scroll-sentinel');
     if (sentinel) observer.observe(sentinel);
 
-    return () => observer.disconnect();
-  }, [hasMore, page, allFilteredWallpapers]);
+    return () => {
+      observer.disconnect();
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [hasMore]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -127,12 +124,22 @@ export default function Home() {
           </p>
         </div>
       )}
-      <WallpaperGrid
-        wallpapers={displayedWallpapers}
-        favorites={favorites}
-        onWallpaperClick={setSelectedWallpaper}
-        onToggleFavorite={handleToggleFavorite}
-      />
+      
+      {isLoading && displayedWallpapers.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-32 px-4 animate-in fade-in duration-500">
+            <div className="w-12 h-12 border-4 border-neon-green/10 border-t-neon-green rounded-full animate-spin shadow-neon"></div>
+            <p className="text-neon-green/70 font-mono text-sm mt-6 animate-pulse tracking-widest">
+                {'>'} FETCHING_DATA_
+            </p>
+        </div>
+      ) : (
+        <WallpaperGrid
+          wallpapers={displayedWallpapers}
+          favorites={favorites}
+          onWallpaperClick={setSelectedWallpaper}
+          onToggleFavorite={handleToggleFavorite}
+        />
+      )}
 
       {/* Loading Sentinel / Spinner */}
       {hasMore && (

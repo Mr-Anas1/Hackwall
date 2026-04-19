@@ -32,6 +32,8 @@ const fetcher = async (url: string): Promise<WallpapersResponse> => {
     };
 };
 
+const EMPTY_WALLPAPERS: Wallpaper[] = [];
+
 export const useWallpapers = () => {
     const { data, error, isLoading, isValidating, mutate } = useSWR<WallpapersResponse>(
         '/api/wallpapers',
@@ -43,7 +45,7 @@ export const useWallpapers = () => {
     );
 
     return {
-        wallpapers: data?.wallpapers ?? [],
+        wallpapers: data?.wallpapers ?? EMPTY_WALLPAPERS,
         wallpapersError: (data?.error ?? null) || (error ? error.message : null),
         isLoading,
         isValidating,
