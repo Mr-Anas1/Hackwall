@@ -84,14 +84,31 @@ export const getCloudinaryUrl = (
         // Detail: medium resolution (1080px)
         hd: 'w_1080,c_limit,f_webp,q_auto:good',
 
-        // Download: 4K target, but do not upscale beyond original
-        original: 'w_2160,c_limit,f_webp,q_auto:best',
+        // Download: 4K target, preserve original format
+        original: 'w_2160,c_limit,q_auto:best',
     };
 
     const baseUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload`;
     const transform = transformations[quality];
     const normalizedPublicId = normalizeCloudinaryPublicId(publicId);
     const encodedPublicId = encodePublicIdPreservingSlashes(normalizedPublicId);
+    return `${baseUrl}/${transform}/${encodedPublicId}`;
+};
+
+export const getCloudinaryDownloadUrl = (
+    publicId: string,
+    opts?: { format?: 'png' | 'jpg'; maxWidth?: number }
+): string => {
+    const format = opts?.format ?? 'png';
+    const maxWidth = opts?.maxWidth ?? 2160;
+
+    const baseUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+    const normalizedPublicId = normalizeCloudinaryPublicId(publicId);
+    const encodedPublicId = encodePublicIdPreservingSlashes(normalizedPublicId);
+
+    // Force explicit output format so the downloaded file is not WebP.
+    // fl_attachment hints browsers to download; on mobile we still write/share the bytes.
+    const transform = `w_${maxWidth},c_limit,fl_attachment,f_${format},q_auto:best`;
     return `${baseUrl}/${transform}/${encodedPublicId}`;
 };
 

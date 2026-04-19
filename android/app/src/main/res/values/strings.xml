@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">HackWall</string>
+    <string name="title_activity_main">HackWall</string>
+    <string name="package_name">com.hackwall.app</string>
+    <string name="custom_url_scheme">com.hackwall.app</string>
+</resources>

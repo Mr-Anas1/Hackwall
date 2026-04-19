@@ -133,6 +133,12 @@ The app is PWA-ready! To enable:
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | Your Cloudinary cloud name | `demo` |
+| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL | Required |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon/public key | Required |
+
+**For Android/Capacitor builds:**
+- `SUPABASE_URL` | Your Supabase project URL (server-side) | Required |
+- `SUPABASE_SERVICE_ROLE_KEY` | Your Supabase service role key (server-side) | Required |
 
 ## 🚀 Deployment
 
@@ -142,6 +148,25 @@ The app is PWA-ready! To enable:
 npm run build
 # Deploy to Vercel
 ```
+
+### Android (Capacitor)
+
+1. **Build the app:**
+   ```bash
+   npm run build
+   ```
+
+2. **Sync with Capacitor:**
+   ```bash
+   npx cap sync android
+   ```
+
+3. **Open in Android Studio:**
+   ```bash
+   npx cap open android
+   ```
+
+4. **Build and run from Android Studio**
 
 ### Other Platforms
 
@@ -159,6 +184,20 @@ npm run build
 - **Storage:** LocalStorage
 
 ## 📝 License
+
+MIT License - feel free to use for your own projects!
+
+## 🤝 Contributing
+
+Contributions welcome! Feel free to open issues or PRs.
+
+## 💚 Made with
+
+Built with Antigravity UI principles - dark, minimal, hacker vibes.
+
+---
+
+**Happy Hacking! 🖤💚**
 
 MIT License - feel free to use for your own projects!
 

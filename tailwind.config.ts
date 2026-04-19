@@ -39,6 +39,12 @@ const config: Config = {
                     '50%': { transform: 'translateX(100%)', opacity: '1' },
                 },
             },
+            spacing: {
+                'safe-top': 'env(safe-area-inset-top)',
+                'safe-bottom': 'env(safe-area-inset-bottom)',
+                'safe-left': 'env(safe-area-inset-left)',
+                'safe-right': 'env(safe-area-inset-right)',
+            },
         },
     },
     plugins: [],

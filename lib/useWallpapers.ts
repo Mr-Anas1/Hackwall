@@ -2,44 +2,61 @@
 
 import useSWR from 'swr';
 import { Wallpaper } from '@/types';
+import { getSupabaseClient } from '@/lib/supabase-client';
 
 type WallpapersResponse = {
     wallpapers: Wallpaper[];
     error?: string | null;
-    details?: string;
 };
 
-const fetcher = async (url: string): Promise<WallpapersResponse> => {
-    const res = await fetch(url);
-    const raw = await res.text();
-
-    let data: WallpapersResponse | null = null;
+const fetcher = async (): Promise<WallpapersResponse> => {
     try {
-        data = raw ? JSON.parse(raw) : null;
-    } catch {
-        data = null;
-    }
+        const supabase = getSupabaseClient();
+        const { data, error } = await supabase
+            .from('wallpapers')
+            .select('id,title,category,cloudinary_public_id,tags,width,height,created_at')
+            .order('created_at', { ascending: false })
+            .limit(100);
 
-    if (!res.ok) {
-        const msg = data?.error || data?.details || raw || `Request failed (${res.status})`;
-        throw new Error(String(msg));
-    }
+        if (error) {
+            throw new Error(error.message);
+        }
 
-    return {
-        wallpapers: Array.isArray(data?.wallpapers) ? data.wallpapers : [],
-        error: data?.error ?? null,
-        details: data?.details,
-    };
+        const wallpapers: Wallpaper[] = (data ?? []).map((row: {
+            id: string | number;
+            title?: string | null;
+            category?: string | null;
+            cloudinary_public_id: string;
+            tags?: unknown;
+            width?: number | null;
+            height?: number | null;
+        }) => ({
+            id: String(row.id),
+            title: row.title ?? 'Untitled Wallpaper',
+            category: row.category ?? 'Uncategorized',
+            cloudinaryPublicId: row.cloudinary_public_id,
+            resolution: row.width && row.height ? `${row.width}x${row.height}` : 'Unknown',
+            tags: Array.isArray(row.tags) ? row.tags : [],
+            isFavorite: false,
+        }));
+
+        return { wallpapers };
+    } catch (error) {
+        console.error('[useWallpapers] Failed to fetch wallpapers:', error);
+        return {
+            wallpapers: [],
+            error: error instanceof Error ? error.message : 'Failed to fetch wallpapers',
+        };
+    }
 };
 
 const EMPTY_WALLPAPERS: Wallpaper[] = [];
 
 export const useWallpapers = () => {
     const { data, error, isLoading, isValidating, mutate } = useSWR<WallpapersResponse>(
-        '/api/wallpapers',
+        'wallpapers',
         fetcher,
         {
-            // If you navigate back to the page quickly, don't revalidate immediately.
             revalidateIfStale: false,
         }
     );
