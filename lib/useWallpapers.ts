@@ -13,7 +13,7 @@ const fetcher = async (url: string): Promise<WallpapersResponse> => {
     const res = await fetch(url);
     const raw = await res.text();
 
-    let data: any = null;
+    let data: WallpapersResponse | null = null;
     try {
         data = raw ? JSON.parse(raw) : null;
     } catch {

@@ -13,12 +13,12 @@ type WallpapersCache = {
 const CACHE_TTL_MS = 60_000;
 
 const getCache = (): WallpapersCache | null => {
-    const g = globalThis as any;
+    const g = globalThis as { __hackwall_wallpapers_cache?: WallpapersCache };
     return g.__hackwall_wallpapers_cache ?? null;
 };
 
 const setCache = (value: WallpapersCache) => {
-    const g = globalThis as any;
+    const g = globalThis as { __hackwall_wallpapers_cache?: WallpapersCache };
     g.__hackwall_wallpapers_cache = value;
 };
 
@@ -68,7 +68,15 @@ export async function GET() {
             throw new Error(error.message);
         }
 
-        const wallpapers: Wallpaper[] = (data ?? []).map((row: any) => ({
+        const wallpapers: Wallpaper[] = (data ?? []).map((row: {
+            id: string | number;
+            title?: string | null;
+            category?: string | null;
+            cloudinary_public_id: string;
+            tags?: unknown;
+            width?: number | null;
+            height?: number | null;
+        }) => ({
             id: String(row.id),
             title: row.title ?? 'Untitled Wallpaper',
             category: row.category ?? 'Uncategorized',
@@ -88,7 +96,7 @@ export async function GET() {
             },
         });
     } catch (error) {
-        const e = error as any;
+        const e = error as Error & { code?: string; errno?: number; syscall?: string; address?: string; port?: number; cause?: unknown };
         console.error('[api/wallpapers] Failed to fetch wallpapers', {
             message: e?.message,
             name: e?.name,

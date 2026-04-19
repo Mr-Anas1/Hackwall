@@ -1,4 +1,3 @@
-import { Wallpaper } from '@/types';
 
 const FAVORITES_KEY = 'hackwall_favorites';
 
