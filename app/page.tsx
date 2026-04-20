@@ -9,7 +9,7 @@ import { categories } from '@/data/wallpapers';
 import { Wallpaper } from '@/types';
 import { getFavorites, toggleFavorite as toggleFavoriteStorage } from '@/lib/storage';
 import { useWallpapers } from '@/lib/useWallpapers';
-import { initializeAdMob, showHomeBanner, hideHomeBanner } from '@/lib/admob';
+import NativeAdBanner from '@/components/NativeAdBanner';
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -31,8 +31,6 @@ export default function Home() {
       setDownloadQuality(savedQuality);
     }
 
-    // Initialize AdMob on app load
-    initializeAdMob();
   }, []);
 
   const { wallpapers, wallpapersError, isLoading } = useWallpapers();
@@ -98,15 +96,6 @@ export default function Home() {
     };
   }, [hasMore]);
 
-  // Hide banner when detail modal is open so it doesn't overlap the close button
-  useEffect(() => {
-    if (selectedWallpaper) {
-      hideHomeBanner();
-    } else {
-      showHomeBanner();
-    }
-  }, [selectedWallpaper]);
-
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     setSelectedCategory(null);
@@ -167,6 +156,8 @@ export default function Home() {
           {'>'} END_OF_LINE_
         </div>
       )}
+
+      <NativeAdBanner hidden={!!selectedWallpaper} />
 
       {selectedWallpaper && (
         <WallpaperDetail
