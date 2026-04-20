@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
 import SWRProvider from "@/components/SWRProvider";
+import AdMobProvider from "@/components/AdMobProvider";
 
 export const metadata: Metadata = {
   title: "HackWall - Cyberpunk Wallpapers",
@@ -33,10 +34,12 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <SWRProvider>
-          <div className="min-h-screen bg-cyber-black">
-            {children}
-            <BottomNav />
-          </div>
+          <AdMobProvider>
+            <div className="min-h-screen bg-cyber-black">
+              {children}
+              <BottomNav />
+            </div>
+          </AdMobProvider>
         </SWRProvider>
       </body>
     </html>

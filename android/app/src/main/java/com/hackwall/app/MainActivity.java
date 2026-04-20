@@ -1,5 +1,14 @@
 package com.hackwall.app;
 
-import com.getcapacitor.BridgeActivity;
+import android.os.Bundle;
 
-public class MainActivity extends BridgeActivity {}
+import com.getcapacitor.BridgeActivity;
+import com.hackwall.app.plugins.NativeAd.NativeAdPlugin;
+
+public class MainActivity extends BridgeActivity {
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    registerPlugin(NativeAdPlugin.class);
+    super.onCreate(savedInstanceState);
+  }
+}

@@ -9,6 +9,7 @@ import { categories } from '@/data/wallpapers';
 import { Wallpaper } from '@/types';
 import { getFavorites, toggleFavorite as toggleFavoriteStorage } from '@/lib/storage';
 import { useWallpapers } from '@/lib/useWallpapers';
+import { initializeAdMob, showHomeBanner, hideHomeBanner } from '@/lib/admob';
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -29,6 +30,9 @@ export default function Home() {
     if (savedQuality) {
       setDownloadQuality(savedQuality);
     }
+
+    // Initialize AdMob on app load
+    initializeAdMob();
   }, []);
 
   const { wallpapers, wallpapersError, isLoading } = useWallpapers();
@@ -94,6 +98,15 @@ export default function Home() {
     };
   }, [hasMore]);
 
+  // Hide banner when detail modal is open so it doesn't overlap the close button
+  useEffect(() => {
+    if (selectedWallpaper) {
+      hideHomeBanner();
+    } else {
+      showHomeBanner();
+    }
+  }, [selectedWallpaper]);
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     setSelectedCategory(null);
@@ -143,14 +156,14 @@ export default function Home() {
 
       {/* Loading Sentinel / Spinner */}
       {hasMore && (
-        <div id="scroll-sentinel" className="flex justify-center p-4 pb-20">
+        <div id="scroll-sentinel" className="flex justify-center p-4 pb-36">
           <div className="w-8 h-8 border-2 border-neon-green/30 border-t-neon-green rounded-full animate-spin"></div>
         </div>
       )}
 
       {/* End of list message if we have content but no more to load */}
       {!hasMore && displayedWallpapers.length > 0 && (
-        <div className="text-center pb-24 pt-4 text-neon-green/30 font-mono text-xs">
+        <div className="text-center pb-36 pt-4 text-neon-green/30 font-mono text-xs">
           {'>'} END_OF_LINE_
         </div>
       )}

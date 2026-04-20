@@ -2,6 +2,7 @@
 
 import { Wallpaper } from '@/types';
 import { getCloudinaryDownloadUrl, getCloudinaryUrl } from '@/lib/cloudinary';
+import { maybeShowInterstitialAfterDownload } from '@/lib/admob';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { Filesystem, Directory } from '@capacitor/filesystem';
@@ -95,6 +96,7 @@ export default function WallpaperDetail({
               data: base64Data,
               directory: Directory.Documents,
             });
+            maybeShowInterstitialAfterDownload();
             setToast({ message: `Saved to Documents/${fileName}`, type: 'success' });
           } catch {
             const writeRes = await Filesystem.writeFile({
@@ -104,6 +106,7 @@ export default function WallpaperDetail({
             });
             await Share.share({ title: 'HackWall', url: writeRes.uri });
             setToast({ message: 'Saved. Choose where to store it', type: 'success' });
+            maybeShowInterstitialAfterDownload();
           }
         } else {
           const url = window.URL.createObjectURL(blob);
