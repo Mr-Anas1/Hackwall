@@ -35,6 +35,16 @@ export default function Home() {
 
   const { wallpapers, wallpapersError, isLoading } = useWallpapers();
 
+  // Fisher-Yates shuffle algorithm
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
   // Filter wallpapers based on category and search
   useEffect(() => {
     if (wallpapers.length === 0) return;
@@ -47,7 +57,7 @@ export default function Home() {
 
     if (searchQuery) {
       const lowerQuery = searchQuery.toLowerCase();
-      filtered = usableWallpapers.filter((w: Wallpaper) => 
+      filtered = usableWallpapers.filter((w: Wallpaper) =>
         w.title.toLowerCase().includes(lowerQuery) ||
         w.tags.some((tag: string) => tag.toLowerCase().includes(lowerQuery)) ||
         w.category.toLowerCase().includes(lowerQuery)
@@ -56,10 +66,13 @@ export default function Home() {
       filtered = usableWallpapers.filter((w: Wallpaper) => w.category === selectedCategory);
     }
 
-    setAllFilteredWallpapers(filtered);
+    // Shuffle the filtered wallpapers
+    const shuffled = shuffleArray(filtered);
+
+    setAllFilteredWallpapers(shuffled);
     setPage(1);
-    setHasMore(filtered.length > ITEMS_PER_PAGE);
-    setDisplayedWallpapers(filtered.slice(0, ITEMS_PER_PAGE));
+    setHasMore(shuffled.length > ITEMS_PER_PAGE);
+    setDisplayedWallpapers(shuffled.slice(0, ITEMS_PER_PAGE));
   }, [selectedCategory, searchQuery, wallpapers]);
 
   // Load more effect tied strictly to page state
