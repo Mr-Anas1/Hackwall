@@ -20,7 +20,7 @@ export default function Header({ onSearch }: HeaderProps) {
       {/* Decorative Top Scanline */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-neon-green opacity-50 shadow-[0_0_10px_#39FF14]" />
       
-      <div className="max-w-7xl mx-auto px-4 py-3">
+      <div className="max-w-7xl mx-auto px-4 py-3 ">
         <div className="flex flex-col gap-4">
           
           {/* Top Row: Logo and Actions */}

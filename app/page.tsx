@@ -126,12 +126,16 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      <Header onSearch={handleSearch} />
-      <CategoryScroll
-        categories={categories}
-        selectedCategory={selectedCategory}
-        onSelectCategory={handleCategorySelect}
-      />
+      <div className="bg-black fixed top-0 left-0 right-0 z-50">
+
+        <Header onSearch={handleSearch} />
+        <CategoryScroll
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={handleCategorySelect}
+        />
+      </div>
+
       {wallpapersError && (
         <div className="px-4 pt-4">
           <p className="text-red-400 font-mono text-sm">

@@ -169,7 +169,7 @@ export default function ProfilePage() {
           <section>
             <h2 className="text-xs font-mono text-gray-500 uppercase tracking-widest pl-4 mb-2">About App</h2>
             <div className="bg-cyber-gray/30 rounded-2xl overflow-hidden border border-neon-green/10 backdrop-blur-sm">
-              <a href="mailto:tensolab.official@gmail.com" className="w-full flex items-center justify-between p-4 border-b border-neon-green/10 hover:bg-neon-green/5 active:bg-neon-green/10 transition-colors">
+              <a href="mailto:support@tensolab.tech" className="w-full flex items-center justify-between p-4 border-b border-neon-green/10 hover:bg-neon-green/5 active:bg-neon-green/10 transition-colors">
                 <span className="font-medium text-sm text-gray-200">Contact Support</span>
                 <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />

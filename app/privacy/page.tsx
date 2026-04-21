@@ -86,7 +86,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg text-neon-green mb-2">8. Contact Us</h2>
             <p>If you have any questions, contact us at:</p>
-            <p className="mt-2 text-neon-green"><a href="mailto:tensolab.official@gmail.com">tensolab.official@gmail.com</a></p>
+            <p className="mt-2 text-neon-green"><a href="mailto:support@tensolab.tech">support@tensolab.tech</a></p>
           </section>
         </div>
       </div>

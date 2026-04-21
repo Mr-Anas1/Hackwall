@@ -84,7 +84,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg text-neon-green mb-2">8. Contact</h2>
             <p>For any questions regarding these terms:</p>
-            <p className="mt-2 text-neon-green"><a href="mailto:tensolab.official@gmail.com">tensolab.official@gmail.com</a></p>
+            <p className="mt-2 text-neon-green"><a href="mailto:support@tensolab.tech">support@tensolab.tech</a></p>
           </section>
         </div>
       </div>
