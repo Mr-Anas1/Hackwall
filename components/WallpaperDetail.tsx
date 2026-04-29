@@ -125,15 +125,73 @@ export default function WallpaperDetail({
   };
 
   const handleShare = async () => {
-    const shareUrl = hasError ? window.location.href : hdUrl;
-    const { Capacitor } = await import('@capacitor/core');
-    if (Capacitor.isNativePlatform()) {
-      await Share.share({ title: 'HackWall', text: 'Check this out!', url: shareUrl });
-    } else if (navigator.share) {
-      await navigator.share({ title: 'HackWall', url: shareUrl });
-    } else {
-      navigator.clipboard.writeText(shareUrl);
-      alert('Link copied!');
+    try {
+      if (hasError) {
+        setToast({ message: 'Cannot share missing image', type: 'error' });
+        return;
+      }
+
+      const shareUrl = downloadQuality === 'original'
+        ? getCloudinaryDownloadUrl(wallpaper.cloudinaryPublicId, { format: 'png', maxWidth: 4096 })
+        : getCloudinaryDownloadUrl(wallpaper.cloudinaryPublicId, { format: 'png', maxWidth: 2160 });
+
+      const response = await fetch(shareUrl);
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = async () => {
+        const base64Data = (reader.result as string).split(',')[1];
+        const titlePartRaw = wallpaper.title ? String(wallpaper.title).trim() : '';
+        const titlePart =
+          titlePartRaw && titlePartRaw.toLowerCase() !== 'untitled wallpaper'
+            ? toSafeFilenamePart(titlePartRaw)
+            : '';
+        const categoryPart = wallpaper.category ? toSafeFilenamePart(String(wallpaper.category)) : '';
+        const idPart = toSafeFilenamePart(String(wallpaper.id));
+        const baseName =
+          titlePart
+            ? `HackWall_${titlePart}`
+            : categoryPart
+              ? `HackWall_${categoryPart}`
+              : `HackWall_${idPart}`;
+        const fileName = `${baseName}_${downloadQuality}.png`;
+        const { Capacitor } = await import('@capacitor/core');
+
+        if (Capacitor.isNativePlatform()) {
+          const writeRes = await Filesystem.writeFile({
+            path: fileName,
+            data: base64Data,
+            directory: Directory.Cache,
+          });
+          const shareText = wallpaper.title && wallpaper.title.toLowerCase() !== 'untitled wallpaper'
+            ? `Check out this wallpaper: ${wallpaper.title}`
+            : 'Check out this wallpaper';
+          await Share.share({
+            title: 'HackWall Wallpaper',
+            text: shareText,
+            url: writeRes.uri,
+          });
+          setToast({ message: 'Image shared successfully', type: 'success' });
+        } else if (navigator.share) {
+          const url = window.URL.createObjectURL(blob);
+          const file = new File([blob], fileName, { type: 'image/png' });
+          const shareText = wallpaper.title && wallpaper.title.toLowerCase() !== 'untitled wallpaper'
+            ? `Check out this wallpaper: ${wallpaper.title}`
+            : 'Check out this wallpaper';
+          await navigator.share({
+            title: 'HackWall Wallpaper',
+            text: shareText,
+            files: [file],
+          });
+          window.URL.revokeObjectURL(url);
+          setToast({ message: 'Image shared successfully', type: 'success' });
+        } else {
+          navigator.clipboard.writeText(hdUrl);
+          alert('Link copied!');
+        }
+      };
+    } catch {
+      setToast({ message: 'Share failed', type: 'error' });
     }
   };
 

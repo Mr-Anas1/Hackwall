@@ -42,7 +42,7 @@ export async function initializeAdMob() {
       if (!Capacitor.isNativePlatform()) return;
 
       await AdMob.initialize({
-        initializeForTesting: true,
+        initializeForTesting: false,
       });
 
       console.log('[AdMob] Initialized');
