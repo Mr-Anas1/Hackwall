@@ -10,13 +10,17 @@ type WallpapersResponse = {
 };
 
 const fetcher = async (): Promise<WallpapersResponse> => {
+    console.log('[useWallpapers] Fetching wallpapers...');
     try {
         const supabase = getSupabaseClient();
+        console.log('[useWallpapers] Supabase client created');
         const { data, error } = await supabase
             .from('wallpapers')
             .select('id,title,category,cloudinary_public_id,tags,width,height,created_at')
             .order('created_at', { ascending: false })
             .limit(100);
+
+        console.log('[useWallpapers] Query result:', { data, error });
 
         if (error) {
             throw new Error(error.message);
@@ -40,6 +44,7 @@ const fetcher = async (): Promise<WallpapersResponse> => {
             isFavorite: false,
         }));
 
+        console.log('[useWallpapers] Mapped wallpapers:', wallpapers.length);
         return { wallpapers };
     } catch (error) {
         console.error('[useWallpapers] Failed to fetch wallpapers:', error);
@@ -58,6 +63,7 @@ export const useWallpapers = () => {
         fetcher,
         {
             revalidateIfStale: false,
+            revalidateOnMount: true,
         }
     );
 

@@ -92,6 +92,7 @@ export default function Home() {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
+          if (timeoutId) clearTimeout(timeoutId);
           timeoutId = setTimeout(() => {
             setPage((prevPage) => prevPage + 1);
           }, 400);
@@ -107,7 +108,7 @@ export default function Home() {
       observer.disconnect();
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [hasMore]);
+  }, [hasMore, displayedWallpapers.length]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -125,7 +126,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen pt-48">
       <div className="bg-black fixed top-0 left-0 right-0 z-50">
 
         <Header onSearch={handleSearch} />
@@ -161,7 +162,7 @@ export default function Home() {
       )}
 
       {/* Loading Sentinel / Spinner */}
-      {hasMore && (
+      {hasMore && displayedWallpapers.length > 0 && (
         <div id="scroll-sentinel" className="flex justify-center p-4 pb-36">
           <div className="w-8 h-8 border-2 border-neon-green/30 border-t-neon-green rounded-full animate-spin"></div>
         </div>
