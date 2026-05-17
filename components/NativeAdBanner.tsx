@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { loadNativeAd, showNativeAd, hideNativeAd } from '@/lib/nativeAd';
 
-const AD_UNIT_ID = 'ca-app-pub-6388743721359867/1524114083';
+const AD_UNIT_ID = 'ca-app-pub-6388743721359867/1402690541';
 const BANNER_HEIGHT = 80;
 const NAVBAR_HEIGHT = 64;
 

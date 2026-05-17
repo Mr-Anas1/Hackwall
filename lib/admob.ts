@@ -4,9 +4,9 @@ import { AdMob, BannerAdSize, BannerAdPosition } from '@capacitor-community/admo
 import { App } from '@capacitor/app';
 
 // Ad Unit IDs (Android)
-const BANNER_AD_UNIT_ID = 'ca-app-pub-6388743721359867/3429589679';
-const INTERSTITIAL_AD_UNIT_ID = 'ca-app-pub-6388743721359867/8932138302';
-const APP_OPEN_AD_UNIT_ID = 'ca-app-pub-6388743721359867/8932138302'; // Using interstitial as app open for now
+const BANNER_AD_UNIT_ID = 'ca-app-pub-6388743721359867/8118325443';
+const INTERSTITIAL_AD_UNIT_ID = 'ca-app-pub-6388743721359867/6805243776';
+const APP_OPEN_AD_UNIT_ID = 'ca-app-pub-6388743721359867/6805243776'; // Using interstitial as app open for now
 
 // Rate limiting keys
 const STORAGE_KEYS = {

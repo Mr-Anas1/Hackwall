@@ -14,7 +14,7 @@ public class MainActivity extends BridgeActivity {
   }
 
   @Override
-  protected void onStart() {
+  public void onStart() {
     super.onStart();
     // Disable zoom in WebView
     if (this.bridge != null && this.bridge.getWebView() != null) {
