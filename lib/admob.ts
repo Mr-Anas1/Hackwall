@@ -18,10 +18,10 @@ const STORAGE_KEYS = {
 };
 
 // Rate limiting constants
-const INTERSTITIAL_PER_DOWNLOADS = 2; // Show 1 interstitial per 2 downloads
-const INTERSTITIAL_COOLDOWN_MS = 2 * 60 * 1000; // 2 minutes
-const APP_OPEN_COOLDOWN_MS = 2 * 60 * 1000; // 2 minutes
-const APP_OPEN_MIN_BACKGROUND_MS = 45 * 1000; // 45 seconds backgrounded
+const INTERSTITIAL_PER_DOWNLOADS = 1; // Show 1 interstitial per 1 download
+const INTERSTITIAL_COOLDOWN_MS = 30 * 1000; // 30 seconds
+const APP_OPEN_COOLDOWN_MS = 30 * 1000; // 30 seconds
+const APP_OPEN_MIN_BACKGROUND_MS = 10 * 1000; // 10 seconds backgrounded
 
 let isInterstitialReady = false;
 let isAppOpenReady = false;
